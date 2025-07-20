@@ -28,30 +28,29 @@ public class MainMenuManager : MonoBehaviour
     public void menuNewGame()
     {
         PlayClickSound();
-        SceneManager.LoadScene("Open World"); // Replace with actual game scene name
+        SceneManager.LoadScene("OpenWorld");
     }
 
     public void menuSettings()
     {
         PlayClickSound();
         Debug.Log("Opening Settings Menu...");
-        // Open settings UI panel here
     }
 
     public void menuLoad()
     {
         PlayClickSound();
         Debug.Log("Loading game...");
-        // Implement save/load logic here
     }
 
     public void menuExit()
     {
+
         PlayClickSound();
         Debug.Log("Exiting Game...");
 
 #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false; // Stops play mode in Unity Editor
+        UnityEditor.EditorApplication.isPlaying = false;
 #else
             Application.Quit(); // Exits the game
 #endif
