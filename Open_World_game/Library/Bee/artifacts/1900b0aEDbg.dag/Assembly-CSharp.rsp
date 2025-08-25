@@ -362,6 +362,7 @@
 "Assets/Scripts/Collectibles.cs"
 "Assets/Scripts/MainMenuManager.cs"
 "Assets/Scripts/PlayerMovement.cs"
+"Assets/Scripts/RespawnManager.cs"
 -langversion:9.0
 /deterministic
 /optimize-

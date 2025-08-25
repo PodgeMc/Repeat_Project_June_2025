@@ -1,61 +1,59 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
-public class PlayerMovement : MonoBehaviour
+[RequireComponent(typeof(Rigidbody))]
+public class TankPlayerMovement : MonoBehaviour
 {
-    [Header("Movement Settings")]
-    public float movementSpeed = 5f;
+    [Header("Movement")]
+    public float walkSpeed = 5f;
+    public float runSpeed = 10f;
+    public float rotationSpeed = 180f;
+    public float doubleTapTime = 0.3f; // time window for double-tap W
 
-    private Rigidbody rb;
-    private Vector2 moveInput;
+    Rigidbody rb;
+    float moveInput;
+    float turnInput;
+    float lastWTime;
+    bool isRunning;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        rb.interpolation = RigidbodyInterpolation.Interpolate;
+        rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+    }
+
+    void Update()
+    {
+        // Forward/back (W/S) and rotate (A/D)
+        moveInput = Input.GetAxisRaw("Vertical");   // W=1, S=-1
+        turnInput = Input.GetAxisRaw("Horizontal"); // A=-1, D=1
+
+        // Double-tap W to run
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            if (Time.time - lastWTime < doubleTapTime)
+                isRunning = true;
+
+            lastWTime = Time.time;
+        }
+
+        // Stop running when W is released
+        if (Input.GetKeyUp(KeyCode.W))
+            isRunning = false;
     }
 
     void FixedUpdate()
     {
-        HandleMovement();
+        // Choose walk or run speed
+        float speed = isRunning ? runSpeed : walkSpeed;
+
+        // Move forward/back
+        Vector3 move = transform.forward * moveInput * speed * Time.fixedDeltaTime;
+        rb.MovePosition(rb.position + move);
+
+        // Rotate left/right
+        float turn = turnInput * rotationSpeed * Time.fixedDeltaTime;
+        Quaternion turnRot = Quaternion.Euler(0f, turn, 0f);
+        rb.MoveRotation(rb.rotation * turnRot);
     }
-
-    // Input System Callback for Movement
-    public void OnMove(InputAction.CallbackContext context)
-    {
-        moveInput = context.ReadValue<Vector2>();
-    }
-
-    private void HandleMovement()
-    {
-        Vector3 movement = new Vector3(moveInput.x, 0f, moveInput.y) * movementSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + transform.TransformDirection(movement));
-    }
-
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Respawn"))
-        {
-            Debug.Log("Player entered respawn trigger.");
-            //RespawnPlayer(gameObject);
-        }
-    }
-
-    //void RespawnPlayer(GameObject player)
-    //{
-    //    RespawnManager respawnManager = FindObjectOfType<RespawnManager>();
-
-    //    if (respawnManager != null)
-    //    {
-    //        Debug.Log("Respawning player...");
-    //        player.transform.position = respawnManager.respawnPoint.position;
-    //        Debug.Log("Player respawned at: " + respawnManager.respawnPoint.position);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("RespawnManager not found in the scene. Cannot respawn player.");
-    //    }
-    //}
 }
