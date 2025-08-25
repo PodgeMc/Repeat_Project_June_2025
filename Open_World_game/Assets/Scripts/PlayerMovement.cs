@@ -1,18 +1,23 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class TankPlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
     public float rotationSpeed = 180f;
-    public float doubleTapTime = 0.3f; // time window for double-tap W
+    public float doubleTapTime = 0.3f;
+
+    [Header("Jump")]
+    public float jumpForce = 7f;
+    public float jumpCooldown = 2f; // time (seconds) between jumps
 
     Rigidbody rb;
     float moveInput;
     float turnInput;
     float lastWTime;
+    float lastJumpTime = -999f; // start far in the past
     bool isRunning;
 
     void Start()
@@ -25,8 +30,8 @@ public class TankPlayerMovement : MonoBehaviour
     void Update()
     {
         // Forward/back (W/S) and rotate (A/D)
-        moveInput = Input.GetAxisRaw("Vertical");   // W=1, S=-1
-        turnInput = Input.GetAxisRaw("Horizontal"); // A=-1, D=1
+        moveInput = Input.GetAxisRaw("Vertical");
+        turnInput = Input.GetAxisRaw("Horizontal");
 
         // Double-tap W to run
         if (Input.GetKeyDown(KeyCode.W))
@@ -37,14 +42,22 @@ public class TankPlayerMovement : MonoBehaviour
             lastWTime = Time.time;
         }
 
-        // Stop running when W is released
         if (Input.GetKeyUp(KeyCode.W))
             isRunning = false;
+
+        // Jump with cooldown
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Time.time - lastJumpTime >= jumpCooldown)
+            {
+                rb.velocity = new Vector3(rb.velocity.x, jumpForce, rb.velocity.z);
+                lastJumpTime = Time.time;
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        // Choose walk or run speed
         float speed = isRunning ? runSpeed : walkSpeed;
 
         // Move forward/back
