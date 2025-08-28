@@ -368,6 +368,7 @@
 "Assets/Scripts/MainMenuManager.cs"
 "Assets/Scripts/PlayerInteraction.cs"
 "Assets/Scripts/PlayerMovement.cs"
+"Assets/Scripts/Portal.cs"
 "Assets/Scripts/RespawnManager.cs"
 -langversion:9.0
 /deterministic
