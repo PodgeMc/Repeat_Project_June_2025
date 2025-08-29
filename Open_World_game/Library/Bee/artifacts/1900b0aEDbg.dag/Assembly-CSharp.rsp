@@ -367,6 +367,7 @@
 "Assets/Scripts/EnemyAI.cs"
 "Assets/Scripts/MainMenuManager.cs"
 "Assets/Scripts/PlayerInteraction.cs"
+"Assets/Scripts/PlayerManager.cs"
 "Assets/Scripts/PlayerMovement.cs"
 "Assets/Scripts/Portal.cs"
 "Assets/Scripts/RespawnManager.cs"
