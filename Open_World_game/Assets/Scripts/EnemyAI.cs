@@ -3,6 +3,9 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
+
+    //Headers used for easy identification in inspector
+
     [Header("References")]
     public NavMeshAgent agent;
     public Transform player;
@@ -31,6 +34,7 @@ public class EnemyAI : MonoBehaviour
 
     void Awake()
     {
+       
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!player)
         {
@@ -42,6 +46,7 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
+        // Initialize enemy path finding
         if (agent)
         {
             agent.speed = patrolSpeed;
@@ -52,6 +57,7 @@ public class EnemyAI : MonoBehaviour
 
     void Update()
     {
+        // Basic AI: Patrol, Chase, Attack
         if (!agent) return;
 
         bool inRange = false;
@@ -75,6 +81,7 @@ public class EnemyAI : MonoBehaviour
 
         if (anim)
         {
+            // Simple animation control
             anim.SetBool("Running", chasing);
             anim.SetBool("Walking", !chasing);
         }

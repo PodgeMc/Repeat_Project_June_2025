@@ -3,10 +3,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
+
+    //Headers used for easy identification in inspector
+
     [Header("Movement Settings")]
     public float walkSpeed = 5f;       // walk speed
-    public float runSpeed = 8f;        // run speed (hold Shift)
-    public float rotationSpeed = 180f; // turn speed (A/D)
+    public float runSpeed = 8f;        // run speed - hold Shift
+    public float rotationSpeed = 180f; // turn speed - A/D
 
     [Header("Jump Settings")]
     public float jumpForce = 5f;       // jump height
@@ -24,11 +27,11 @@ public class PlayerMovement : MonoBehaviour
 
     void Awake()
     {
+        // Get components
         rb = GetComponent<Rigidbody>();
         anim = GetComponentInChildren<Animator>();
 
-        // Freeze X and Z rotation so the player can't tip over.
-        // Leave Y free so we can turn left/right with code.
+        // If no animator found, just skip animations
         rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         rb.interpolation = RigidbodyInterpolation.Interpolate;
     }
@@ -74,14 +77,14 @@ public class PlayerMovement : MonoBehaviour
     {
         float targetSpeed = wantsRun ? runSpeed : walkSpeed;
 
-        // Move forward/back (only if pressing W/S)
+        // Move forward/back by pressing W/S
         if (Mathf.Abs(moveInput) > 0.01f)
         {
             Vector3 move = transform.forward * moveInput * targetSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + move);
         }
 
-        // Rotate left/right (always allowed with A/D)
+        // Rotate left/right with A/D
         if (Mathf.Abs(turnInput) > 0.01f)
         {
             float yaw = turnInput * rotationSpeed * Time.fixedDeltaTime;

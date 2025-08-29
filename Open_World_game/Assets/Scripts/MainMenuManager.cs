@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuManager : MonoBehaviour
 {
+
+    //Headers used for easy identification in inspector
     [Header("Audio Settings")]
     public AudioSource menuMusic;  // Background music
     public AudioSource clickSound; // Button click sound
@@ -23,6 +25,13 @@ public class MainMenuManager : MonoBehaviour
         {
             clickSound.Play();
         }
+    }
+
+    public void ReturnToMenu()
+    {
+        PlayClickSound();
+        SceneManager.LoadScene("MainMenu");
+        Debug.Log("Returning to main menu...");
     }
 
     public void menuNewGame()
